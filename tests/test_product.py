@@ -1,6 +1,4 @@
-import pytest
-
-from product import Product, Category
+from src.product import Product, Category
 
 
 class TestProduct:
