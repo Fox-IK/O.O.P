@@ -1,26 +1,26 @@
-from product import Category, Product
+from src.product import Category, Product
 
-if __name__ == "__main__":
+
+def demonstrate_all_features():
+    """Демонстрация всех функций проекта"""
+    print("=" * 60)
+    print("ДЕМОНСТРАЦИЯ ВСЕХ ФУНКЦИЙ ПРОЕКТА")
+    print("=" * 60)
+
+    # 1. Базовое создание продуктов и категорий
+    print("\n1. БАЗОВОЕ СОЗДАНИЕ ПРОДУКТОВ И КАТЕГОРИЙ")
+    print("-" * 40)
+
     product1 = Product(
         "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
     )
     product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
     product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
 
-    print(product1.name)
-    print(product1.description)
-    print(product1.price)
-    print(product1.quantity)
-
-    print(product2.name)
-    print(product2.description)
-    print(product2.price)
-    print(product2.quantity)
-
-    print(product3.name)
-    print(product3.description)
-    print(product3.price)
-    print(product3.quantity)
+    print("Созданные продукты:")
+    print(f"  - {product1}")
+    print(f"  - {product2}")
+    print(f"  - {product3}")
 
     category1 = Category(
         "Смартфоны",
@@ -28,129 +28,29 @@ if __name__ == "__main__":
         [product1, product2, product3],
     )
 
-    print(category1.name == "Смартфоны")
-    print(category1.description)
-    print(len(category1.products))
-    print(category1.category_count)
-    print(category1.product_count)
-
-    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)
-    category2 = Category(
-        "Телевизоры",
-        "Современный телевизор, который позволяет наслаждаться просмотром, станет вашим другом и помощником",
-        [product4],
-    )
-
-    print(category2.name)
-    print(category2.description)
-    print(len(category2.products))
-    print(category2.products)
-
-    print(Category.category_count)
-    print(Category.product_count)
-
-
-def demonstrate_additional_features():
-    """Демонстрация дополнительных функций"""
-    print("=== ДЕМОНСТРАЦИЯ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ ===")
-
-    # Создаем начальные продукты
-    existing_products = [
-        Product("Samsung Galaxy S23", "256GB, Черный", 80000.0, 10),
-        Product("iPhone 14", "128GB, Синий", 70000.0, 15),
-    ]
-
-    print("Существующие продукты:")
-    for product in existing_products:
-        print(f"  - {product}")
-
-    # Демонстрация класс-метода с проверкой дубликатов
-    print("\n--- Проверка дубликатов через класс-метод ---")
-
-    # Пытаемся создать продукт с таким же именем (должен объединиться)
-    duplicate_product_data = {
-        "name": "Samsung Galaxy S23",  # Такое же имя
-        "description": "256GB, Белый",  # Другое описание
-        "price": 85000.0,  # Более высокая цена
-        "quantity": 5,  # Дополнительное количество
-    }
-
-    new_product = Product.new_product(duplicate_product_data, existing_products)
-    print(f"Результат создания дубликата: {new_product}")
-    print(
-        f"Общее количество Samsung Galaxy S23: {existing_products[0].quantity}"
-    )  # Должно быть 15
-
-    # Создаем совершенно новый продукт
-    new_product_data = {
-        "name": "Google Pixel 7",
-        "description": "128GB, Черный",
-        "price": 60000.0,
-        "quantity": 8,
-    }
-
-    truly_new_product = Product.new_product(new_product_data, existing_products)
-    print(f"Результат создания нового продукта: {truly_new_product}")
-
-    print("\nОбновленный список продуктов:")
-    for product in existing_products:
-        print(f"  - {product}")
-
-
-def demonstrate_price_confirmation():
-    """Демонстрация подтверждения изменения цены"""
-    print("\n--- Подтверждение изменения цены ---")
-
-    product = Product("Test Product", "Test Description", 1000.0, 5)
-    print(f"Текущая цена: {product.price}")
-
-    # Попытка понизить цену (требует подтверждения)
-    print("Попытка понизить цену до 800...")
-    # В реальном сценарии здесь будет запрос подтверждения через input
-    # Для демонстрации мы симулируем это
-    product.price = 800.0
-
-    print(f"Цена после попытки понижения: {product.price}")
-
-
-if __name__ == "__main__":
-    # Основная демонстрация (как раньше)
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
-
-    print("=== ОСНОВНАЯ ДЕМОНСТРАЦИЯ ===")
-    print(f"Продукт 1: {product1}")
-    print(f"Продукт 2: {product2}")
-    print(f"Продукт 3: {product3}")
-
-    # Создание категории
-    category1 = Category(
-        "Смартфоны",
-        "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни",
-        [product1, product2, product3],
-    )
-
-    print(f"\nКатегория: {category1.name}")
+    print(f"\nСозданная категория: {category1}")
     print(f"Описание: {category1.description}")
-    print("Товары в категории:")
+
+    # 2. Приватные атрибуты и геттеры
+    print("\n2. ПРИВАТНЫЕ АТРИБУТЫ И ГЕТТЕРЫ")
+    print("-" * 40)
+
+    print("Список товаров через геттер:")
     print(category1.products)
 
-    # Добавление нового продукта через метод
+    # 3. Добавление продуктов через метод
+    print("\n3. ДОБАВЛЕНИЕ ПРОДУКТОВ ЧЕРЕЗ МЕТОД")
+    print("-" * 40)
+
     product4 = Product("HONOR Magic5", "512GB, Зеленый", 65000.0, 7)
     category1.add_product(product4)
-
     print("После добавления нового продукта:")
     print(category1.products)
 
-    print("\nОбщая статистика:")
-    print(f"Категорий: {Category.category_count}")
-    print(f"Товаров: {Category.product_count}")
+    # 4. Работа с ценой (геттер/сеттер)
+    print("\n4. РАБОТА С ЦЕНОЙ (ГЕТТЕР/СЕТТЕР)")
+    print("-" * 40)
 
-    # Тестирование сеттера цены
-    print("\n=== ТЕСТИРОВАНИЕ СЕТТЕРА ЦЕНЫ ===")
     print(f"Текущая цена Xiaomi: {product3.price}")
 
     # Попытка установить отрицательную цену
@@ -161,12 +61,155 @@ if __name__ == "__main__":
     product3.price = 35000.0
     print(f"Цена после корректного изменения: {product3.price}")
 
-    # Попытка установить нулевую цену
-    product3.price = 0
-    print(f"Цена после попытки установить нулевую: {product3.price}")
+    # 5. Класс-метод с обработкой дубликатов
+    print("\n5. КЛАСС-МЕТОД С ОБРАБОТКОЙ ДУБЛИКАТОВ")
+    print("-" * 40)
 
-    # Демонстрация дополнительных функций
-    demonstrate_additional_features()
+    existing_products = [
+        Product("Samsung Galaxy S23", "256GB, Черный", 80000.0, 10),
+        Product("iPhone 14", "128GB, Синий", 70000.0, 15),
+    ]
 
-    # Для демонстрации подтверждения цены раскомментируйте следующую строку:
-    # demonstrate_price_confirmation()
+    print("Существующие продукты:")
+    for product in existing_products:
+        print(f"  - {product}")
+
+    # Создаем дубликат
+    duplicate_data = {
+        "name": "Samsung Galaxy S23",
+        "description": "256GB, Белый",
+        "price": 85000.0,
+        "quantity": 5,
+    }
+
+    new_product = Product.new_product(duplicate_data, existing_products)
+    print(f"\nРезультат создания дубликата: {new_product}")
+    print(f"Общее количество Samsung Galaxy S23: {existing_products[0].quantity}")
+
+    # 6. Магические методы
+    print("\n6. МАГИЧЕСКИЕ МЕТОДЫ")
+    print("-" * 40)
+
+    # __str__
+    print("Строковое представление:")
+    print(f"  Продукт: {product1}")
+    print(f"  Категория: {category1}")
+
+    # __add__
+    total_value = product1 + product2
+    print(
+        f"\nСложение продуктов: {product1.name} + {product2.name} = {total_value} руб."
+    )
+
+    # Итератор
+    print("\nИтерация по категории:")
+    for i, product in enumerate(category1, 1):
+        print(f"  {i}. {product}")
+
+    # 7. Статистика
+    print("\n7. СТАТИСТИКА")
+    print("-" * 40)
+
+    # Создаем вторую категорию для демонстрации счетчиков
+    tv_product = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)
+    category2 = Category(
+        "Телевизоры",
+        "Современный телевизор, который позволяет наслаждаться просмотром",
+        [tv_product],
+    )
+
+    print(f"Вторая категория: {category2}")  # Используем переменную
+    print(f"Общее количество категорий: {Category.category_count}")
+    print(f"Общее количество товаров: {Category.product_count}")
+
+
+def demonstrate_edge_cases():
+    """Демонстрация граничных случаев"""
+    print("\n" + "=" * 60)
+    print("ГРАНИЧНЫЕ СЛУЧАИ И ОБРАБОТКА ОШИБОК")
+    print("=" * 60)
+
+    # Пустая категория
+    empty_category = Category("Пустая категория", "Нет товаров", [])
+    print(f"Пустая категория: {empty_category}")
+    print("Продукты в пустой категории:")
+    for product in empty_category:
+        print("  (нет продуктов)")
+
+    # Продукты с нулевым количеством
+    zero_product = Product("Товар без запаса", "Описание", 1000.0, 0)
+    print(f"\nТовар без запаса: {zero_product}")
+
+    # Ошибка при сложении
+    try:
+        product = Product("Test", "Desc", 100.0, 5)
+        # Убираем присваивание ненужной переменной result
+        _ = product + "не продукт"  # Должно вызвать TypeError
+    except TypeError as e:
+        print(f"\nОшибка при сложении: {e}")
+
+    # Ошибка при добавлении не-продукта
+    try:
+        category = Category("Test", "Test", [])
+        category.add_product("not a product")
+    except TypeError as e:
+        print(f"Ошибка при добавлении: {e}")
+
+
+def demonstrate_magic_methods():
+    """Демонстрация магических методов"""
+    print("\n" + "=" * 60)
+    print("ДОПОЛНИТЕЛЬНАЯ ДЕМОНСТРАЦИЯ МАГИЧЕСКИХ МЕТОДОВ")
+    print("=" * 60)
+
+    # Создаем продукты для демонстрации
+    product1 = Product("iPhone 15", "256GB, Black", 80000.0, 10)
+    product2 = Product("Samsung Galaxy", "512GB, White", 70000.0, 15)
+    product3 = Product("Xiaomi Phone", "128GB, Blue", 30000.0, 20)
+
+    # Демонстрация __str__ для Product
+    print("--- Строковое представление продуктов ---")
+    print(f"Продукт 1: {product1}")
+    print(f"Продукт 2: {product2}")
+    print(f"Продукт 3: {product3}")
+
+    # Демонстрация __add__ для Product
+    print("\n--- Сложение продуктов ---")
+    total_value = product1 + product2
+    print(f"Общая стоимость iPhone и Samsung: {total_value} руб.")
+
+    # Сложение трех продуктов (попарно)
+    total_all = (product1 + product2) + (product3.price * product3.quantity)
+    print(f"Общая стоимость всех трех продуктов: {total_all} руб.")
+
+    # Создаем категорию
+    category = Category(
+        "Смартфоны",
+        "Мобильные телефоны различных брендов",
+        [product1, product2, product3],
+    )
+
+    # Демонстрация __str__ для Category
+    print("\n--- Строковое представление категории ---")
+    print(f"Категория: {category}")
+
+    # Демонстрация итератора
+    print("\n--- Итерация по продуктам категории ---")
+    print("Продукты в категории:")
+    for i, product in enumerate(category, 1):
+        print(f"  {i}. {product}")
+
+
+if __name__ == "__main__":
+    # Основная демонстрация
+    demonstrate_all_features()
+
+    # Демонстрация граничных случаев
+    demonstrate_edge_cases()
+
+    # Дополнительная демонстрация магических методов
+    demonstrate_magic_methods()
+
+    print("\n" + "=" * 60)
+    print("ДЕМОНСТРАЦИЯ ЗАВЕРШЕНА")
+    print("=" * 60)
