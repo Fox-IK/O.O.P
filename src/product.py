@@ -1,6 +1,101 @@
-class Product:
+from abc import ABC, abstractmethod
+
+
+class LoggingMixin:
     """
-    Базовый класс для представления товара.
+    Миксин для логирования создания объектов.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Инициализация миксина с логированием параметров создания.
+        """
+        super().__init__(*args, **kwargs)
+        class_name = self.__class__.__name__
+        params = []
+
+        # Собираем параметры из args
+        if args:
+            params.extend(repr(arg) for arg in args)
+
+        # Собираем параметры из kwargs
+        if kwargs:
+            params.extend(f"{key}={repr(value)}" for key, value in kwargs.items())
+
+        params_str = ", ".join(params)
+        print(f"Создан объект {class_name}({params_str})")
+
+
+class BaseProduct(ABC):
+    """
+    Абстрактный базовый класс для всех продуктов.
+
+    Определяет общий интерфейс для всех продуктов.
+    """
+
+    @abstractmethod
+    def __init__(self, name: str, description: str, price: float, quantity: int):
+        """
+        Абстрактный конструктор для продуктов.
+
+        Args:
+            name: Название продукта
+            description: Описание продукта
+            price: Цена продукта
+            quantity: Количество продукта
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Абстрактное свойство для названия продукта."""
+        pass
+
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        """Абстрактное свойство для описания продукта."""
+        pass
+
+    @property
+    @abstractmethod
+    def price(self) -> float:
+        """Абстрактное свойство для цены продукта."""
+        pass
+
+    @price.setter
+    @abstractmethod
+    def price(self, value: float):
+        """Абстрактный сеттер для цены."""
+        pass
+
+    @property
+    @abstractmethod
+    def quantity(self) -> int:
+        """Абстрактное свойство для количества продукта."""
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
+        """Абстрактный метод строкового представления."""
+        pass
+
+    @abstractmethod
+    def __add__(self, other) -> float:
+        """Абстрактный метод сложения продуктов."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def new_product(cls, product_data: dict, products_list: list = None):
+        """Абстрактный класс-метод создания нового продукта."""
+        pass
+
+
+class Product(LoggingMixin, BaseProduct):
+    """
+    Конкретный класс продукта, наследуемый от BaseProduct с миксином.
 
     Атрибуты:
         name (str): Название товара
@@ -10,10 +105,11 @@ class Product:
     """
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
-        self.name = name
-        self.description = description
+        self._name = name
+        self._description = description
         self.__price = price
-        self.quantity = quantity
+        self._quantity = quantity
+        super().__init__(name, description, price, quantity)
 
     def __str__(self):
         """Строковое представление продукта."""
@@ -25,9 +121,6 @@ class Product:
 
         Returns:
             float: Сумма произведений цены на количество для двух продуктов
-
-        Raises:
-            TypeError: Если other не является объектом того же класса
         """
         if type(self) is not type(other):
             raise TypeError("Нельзя складывать товары разных типов")
@@ -56,7 +149,17 @@ class Product:
         )
 
     @property
-    def price(self):
+    def name(self) -> str:
+        """Геттер для названия."""
+        return self._name
+
+    @property
+    def description(self) -> str:
+        """Геттер для описания."""
+        return self._description
+
+    @property
+    def price(self) -> float:
         """Геттер для цены."""
         return self.__price
 
@@ -84,6 +187,18 @@ class Product:
                 pass
 
         self.__price = new_price
+
+    @property
+    def quantity(self) -> int:
+        """Геттер для количества."""
+        return self._quantity
+
+    @quantity.setter
+    def quantity(self, value: int):
+        """Сеттер для количества."""
+        if value < 0:
+            raise ValueError("Количество не может быть отрицательным")
+        self._quantity = value
 
     def __repr__(self):
         """Представление объекта для отладки."""
@@ -159,9 +274,39 @@ class LawnGrass(Product):
         )
 
 
-class Category:
+class Container(ABC):
+    """
+    Абстрактный базовый класс для контейнеров, содержащих продукты.
+
+    Определяет общий интерфейс для категорий и заказов.
+    """
+
+    @abstractmethod
+    def get_total_price(self) -> float:
+        """Абстрактный метод для получения общей стоимости."""
+        pass
+
+    @abstractmethod
+    def get_products_count(self) -> int:
+        """Абстрактный метод для получения количества продуктов."""
+        pass
+
+    @abstractmethod
+    def __len__(self) -> int:
+        """Абстрактный метод для получения длины контейнера."""
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
+        """Абстрактный метод строкового представления."""
+        pass
+
+
+class Category(Container):
     """
     Класс для представления категории товаров.
+
+    Наследует от Container.
 
     Атрибуты:
         name (str): Название категории
@@ -172,7 +317,7 @@ class Category:
     category_count = 0
     product_count = 0
 
-    def __init__(self, name: str, description: str, products: list) -> None:
+    def __init__(self, name: str, description: str, products: list):
         self.name = name
         self.description = description
         self.__products = []
@@ -188,6 +333,10 @@ class Category:
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
+    def __len__(self):
+        """Возвращает количество продуктов в категории."""
+        return len(self.__products)
+
     def __iter__(self):
         """Возвращает итератор для категории."""
         return CategoryIterator(self.__products)
@@ -195,9 +344,6 @@ class Category:
     def add_product(self, product):
         """
         Метод для добавления товара в категорию.
-
-        Raises:
-            TypeError: Если product не является Product или его наследником
         """
         if not isinstance(product, Product):
             raise TypeError(
@@ -206,6 +352,14 @@ class Category:
 
         self.__products.append(product)
         Category.product_count += 1
+
+    def get_total_price(self) -> float:
+        """Возвращает общую стоимость всех продуктов в категории."""
+        return sum(product.price * product.quantity for product in self.__products)
+
+    def get_products_count(self) -> int:
+        """Возвращает количество уникальных продуктов в категории."""
+        return len(self.__products)
 
     @property
     def products(self):
@@ -222,6 +376,59 @@ class Category:
     def __repr__(self):
         """Представление объекта для отладки."""
         return f"Category('{self.name}', '{self.description}', {len(self.__products)} продуктов)"
+
+
+class Order(Container):
+    """
+    Класс для представления заказа.
+
+    Наследует от Container.
+
+    Атрибуты:
+        product (Product): Товар в заказе
+        quantity (int): Количество товара в заказе
+        order_id (str): Уникальный идентификатор заказа
+    """
+
+    order_count = 0
+
+    def __init__(self, product: Product, quantity: int, order_id: str = None):
+        if not isinstance(product, Product):
+            raise TypeError(
+                "Заказ может содержать только объекты класса Product или его наследников"
+            )
+
+        if quantity <= 0:
+            raise ValueError("Количество товара в заказе должно быть положительным")
+
+        if quantity > product.quantity:
+            raise ValueError("Недостаточно товара на складе")
+
+        self.product = product
+        self.quantity = quantity
+        self.order_id = order_id or f"ORDER_{Order.order_count + 1:06d}"
+
+        Order.order_count += 1
+
+    def get_total_price(self) -> float:
+        """Возвращает общую стоимость заказа."""
+        return self.product.price * self.quantity
+
+    def get_products_count(self) -> int:
+        """Возвращает количество продуктов в заказе (всегда 1)."""
+        return 1
+
+    def __len__(self) -> int:
+        """Возвращает количество позиций в заказе (всегда 1)."""
+        return 1
+
+    def __str__(self) -> str:
+        """Строковое представление заказа."""
+        return f"Заказ {self.order_id}: {self.product.name} x {self.quantity} = {self.get_total_price()} руб."
+
+    def __repr__(self) -> str:
+        """Представление объекта для отладки."""
+        return f"Order({repr(self.product)}, {self.quantity}, '{self.order_id}')"
 
 
 class CategoryIterator:
